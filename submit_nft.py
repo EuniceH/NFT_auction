@@ -2,10 +2,52 @@
 import streamlit as st
 import pandas as pd
 from PIL import Image
+from web3 import Web3
 import os
+from dotenv import load_dotenv
+from pathlib import Path
+import json
 from datetime import datetime,timezone,timedelta
-# EH: Set layout as wide
+
+#EH: load env file
+load_dotenv()
+
+
+# Define and connect a new Web3 provider
+w3 = Web3(Web3.HTTPProvider(os.getenv("WEB3_PROVIDER_URI")))
+
+
+# EH: Set streamlit layout as wide
 st.set_page_config(page_title="NFT Submission",layout="wide")
+
+#EH: define load contract function
+
+@st.cache(allow_output_mutation=True)
+def load_contract():
+
+    # Load the contract ABI
+    with open(Path('./contracts/compiled/nftRegistry_abi.json')) as f:
+        contract_abi = json.load(f)
+
+    # Set the contract address (this is the address of the deployed contract)
+    contract_address = os.getenv("SMART_CONTRACT_ADDRESS")
+
+    # Get the contract
+    contract = w3.eth.contract(
+        address=contract_address,
+        abi=contract_abi
+    )
+
+    return contract
+
+#EH: Load the contract
+contract = load_contract()
+
+
+
+
+
+
 # EH: set max screen width.
 st.markdown(
         f"""<style>.main .block-container{{ max-width: 1600px }} </style> """,
@@ -39,10 +81,12 @@ st.subheader("NFT Image")
 image_file = st.file_uploader("Upload Images",
      type=["png","jpg","jpeg"])
 
+
+
 if image_file is not None and (len(username) > 0) and (len(public_key)>0) and (len(asset_caption)>0):
           # TO See details
           file_details = {"filename":image_file.name, "filetype":image_file.type,
-                    "filesize":image_file.size,"Owner Name":username,'Public Key':public_key,'Asset Name':asset_caption,'bid start amount':bid_start,"Bid close date":close_date_request.isoformat()}
+                    "fileslocation":image_file.size,"Owner Name":username,'Public Key':public_key,'Asset Name':asset_caption,'bid start amount':bid_start,"Bid close date":close_date_request.isoformat()}
 
           st.write("Please preview transaction detail before submission.")
           st.write(file_details)
@@ -60,11 +104,23 @@ if image_file is not None and (len(username) > 0) and (len(public_key)>0) and (l
           st.write('By click this button, you agree and are subject to T&C of auction company.')
 
           if submit:
+               
+               trx_hash=contract.functions.nftRegistration(
+                    public_key,#Owner address
+                    asset_caption,#art name
+                    username,#artist/owner name
+                    int(bid_start),#initial appraisal value
+                    str(image_file.size)#tokenURI
+
+               ).transact({'from':public_key,'gas':1000000})
+
+               receipt=w3.eth.waitForTransactionReceipt(trx_hash)
 
               #EH: provide trx hash and asset hash
-              #EH: Need to write more exception syntax on this part
-               st.write('transaction hash#')
-               st.write('Asset hash#')
+
+               st.write("Transaction receipt mined:")
+               st.write(dict(receipt))
+               st.markdown("---")
 
                #EH: display transaction confirmation
                trx_df=pd.DataFrame(file_details,index=[0])
