@@ -1,9 +1,11 @@
 
 import streamlit as st
+import json
 import pandas as pd
 from datetime import datetime,timezone
 import time
 from web3 import Web3
+from dotenv import load_dotenv
 w3 = Web3(Web3.HTTPProvider('HTTP://127.0.0.1:7545'))
 
 
@@ -22,8 +24,26 @@ margin-left: -600px;
 """,
 unsafe_allow_html=True
 )
-# #EH: add cache decorator for streamlit
-# @st.cache(allow_output_mutation=True)
+#EH: add cache decorator for streamlit
+@st.cache(allow_output_mutation=True)
+
+#load contract
+def load_contract():
+
+    # Load the contract ABI
+    with open(Path('./contracts/compiled/artregistry_abi.json')) as f:
+        contract_abi = json.load(f)
+
+    # Set the contract address (this is the address of the deployed contract)
+    contract_address = os.getenv("SMART_CONTRACT_ADDRESS")
+
+    # Get the contract
+    contract = w3.eth.contract(
+        address=contract_address,
+        abi=contract_abi
+    )
+
+    return contract
 
 
 #EH: append bid records
@@ -38,6 +58,7 @@ def delete_ss():
     del st.session_state['counter']
     del st.session_state['current_bid']
     del st.session_state['bid_history']
+    time.sleep(1)
 
 st.title('NFT Auction')
 
@@ -45,8 +66,8 @@ st.title('NFT Auction')
 #EH:  create dictionary for NFT
 nft_database = {
     "Laker_NFT1": ["Laker", 4000, datetime(2022, 6, 18, 0, 0, tzinfo=timezone.utc).isoformat(), "Images/image1.png"],
-    "1990_NFT2": ["1990", 5000, datetime(2022, 6, 1, 0, 0, tzinfo=timezone.utc).isoformat(),"Images/image2.png"],
-    "AllStar_NFT3": ["AllStar",7000, datetime(2022, 6, 8, 0, 0, tzinfo=timezone.utc).isoformat(),"Images/image3.png"]
+    "1990_NFT2": ["1990", 5000, datetime(2022, 6, 30, 0, 0, tzinfo=timezone.utc).isoformat(),"Images/image2.png"],
+    "AllStar_NFT3": ["AllStar",7000, datetime(2022, 6, 9, 0, 0, tzinfo=timezone.utc).isoformat(),"Images/image3.png"]
 }
 
 
@@ -76,6 +97,7 @@ def session_setup():
         st.session_state['prev_bid']=st.session_state['prev_bid']
         st.session_state['counter']=st.session_state['counter']
         st.session_state['current_bid']=st.session_state['current_bid']
+        time.sleep(1)
     
 
 
@@ -100,7 +122,8 @@ st.sidebar.subheader('Auction Entry Form')
 
 
 username=st.sidebar.text_input(label='Username',on_change=session_setup)
-public_key=st.sidebar.text_input(label='Public Key')
+accounts = w3.eth.accounts
+public_key=st.sidebar.selectbox("Select Account", options=accounts,on_change=session_setup)
 
 #EH: Set bid value floor
 def min_set(x,y):
@@ -113,7 +136,8 @@ def min_set(x,y):
     
 
 #EH:  get bid amount input
-bid_amount=st.sidebar.number_input("Enter Bid amount in Token",min_value=min_set(st.session_state['current_bid'],nft_database[nft_option][1]+5),step=5)
+bid_amount=st.sidebar.number_input("Enter Bid amount",min_value=min_set(st.session_state['current_bid'],nft_database[nft_option][1]+5),step=5)
+time.sleep(1)
 
 bid_entry={"Asset Name":nft_database[nft_option][0],"Name":username,"Bid amount":bid_amount,"Public Key":public_key}
 
