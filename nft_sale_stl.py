@@ -28,11 +28,11 @@ st.set_page_config(page_title="NFT Approvals",layout="wide")
 def load_contract():
 
     # Load the contract ABI
-    with open(Path('./contracts/compiled/property_sale_abi.json')) as f:
+    with open(Path('./contracts/compiled/nft_sale_approval_abi.json')) as f:
         contract_abi = json.load(f)
 
     # Set the contract address (this is the address of the deployed contract)
-    contract_address = os.getenv("SMART_CONTRACT_ADDRESS")
+    contract_address = os.getenv("NFT_SALE_APPROVAL_ADDRESS")
 
     # Get the contract
     contract = w3.eth.contract(

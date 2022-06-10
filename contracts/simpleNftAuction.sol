@@ -4,10 +4,11 @@ pragma solidity >=0.7.0 <0.9.0;
 
 contract SimpleNftAuction {
     // Parameters of the auction.
-    // Times are either absolute unix timestamp (seconds since 1970-01-01) or
-    // time periods in seconds.
+    // Times are either absolute unix timestamp (seconds since 1970-01-01) or 
+    // use https://www.unixtimestamp.com/ to help conversion or
+    // enter time periods in seconds in _biddingtime field 
     address payable public beneficiary;
-    uint public auctionEndTime;
+    uint public auctionEndTime; 
 
     // Current state of the auction.
     address public highestBidder;
@@ -58,23 +59,24 @@ contract SimpleNftAuction {
 
         emit HighestBidIncreased(msg.sender, msg.value);
     }
+    /// @TODO: (Next step) 
     /// Withdraw a bid that was overbid.
-    function withdraw() public returns(bool) {
-        uint amount = pendingReturns[msg.sender];
+    // function withdraw() public returns(bool) {
+        // uint amount = pendingReturns[msg.sender];
 
-        if(amount > 0) {
+        // if(amount > 0) {
             // It is important to set this to zero because the recipient can call this function again as part of the receiving call before "send" returns.
-            pendingReturns[msg.sender] = 0;
+            // pendingReturns[msg.sender] = 0;
 
-            if(!payable(msg.sender).send(amount)) {
+            // if(!payable(msg.sender).send(amount)) {
                 // No need to call throw here, just reset the amount owing.
-                pendingReturns[msg.sender] = amount;
-                return false;
-            }
-        }
+                // pendingReturns[msg.sender] = amount;
+                // return false;
+            // }
+        // }
 
-        return true;
-    }
+        // return true;
+    // }
 
     /// End the auction and send the highest bid to the beneficiary. 
     function auctionEnd() public {
@@ -96,5 +98,62 @@ contract SimpleNftAuction {
 
         // Interaction
         beneficiary.transfer(highestBid);
+    }
+}
+
+contract nft_sale_approval {
+    string _tokenURI;
+    uint _highestBid;
+    bool _inspected=false;
+    address payable public owner=msg.sender; 
+
+    mapping(address => uint256) pay_stamp;
+    // mapping(address => uint) offers;
+
+    constructor(string memory tokenURI, address payable beneficiary) {
+        _tokenURI=tokenURI;
+        beneficiary=owner;
+    }
+
+    function get_address() view public returns(string memory) {
+        return _tokenURI;
+    }
+
+    function inspect() public {
+        _inspected=true;
+    }
+
+    function get_inspect_status() view public returns(bool) {
+        return _inspected;
+    }
+
+    function transfer_property(address payable buyer) public {
+        require(_inspected==true);
+        owner=buyer;
+    }
+
+    function pay_property(address payable buyer) public payable {
+        require(_inspected==true);
+        owner=buyer;
+        msg.sender.transfer(_highestBid);
+        pay_stamp[msg.sender]=block.timestamp;
+    }
+
+    function lender_approve(address payable approved) public payable { //verify AuctionEnded, confirm buyer funds, and transfer
+        require(_inspected==true);
+        require(pay_stamp[approved]>0);
+        require(msg.value>_highestBid);
+        // lender approves credit
+
+        // calculate overpayment
+        uint overpayment=msg.value-_highestBid;
+        owner.transfer(_highestBid);
+        msg.sender.transfer(overpayment);
+
+        owner=approved;
+    }
+
+    function get_pay_date(address buyer) view public returns(uint256) {
+        return pay_stamp[buyer];
     }
 }
