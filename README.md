@@ -16,6 +16,9 @@ https://user-images.githubusercontent.com/95498383/172528594-3ca3de35-c45d-4054-
 
 ## The required librarys and installation required to run the auction house are as follows:
 
+### Python 3.7
+https://www.python.org/downloads/
+
 ### Streamlit
 pip install streamlit
 
@@ -29,4 +32,8 @@ pip install pathlib
 pip install -U python-dotenv
 
 ### Web3
-pip install web3
+pip install web3==5.17
+
+### Ganache
+https://www.trufflesuite.com/ganache <-- follow instructions from this link
+
