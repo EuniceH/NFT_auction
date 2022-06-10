@@ -16,27 +16,27 @@ https://user-images.githubusercontent.com/95498383/172528594-3ca3de35-c45d-4054-
 
 ## Required Libraries and Installation Instructions:
 
-### Python 3.7
+#### Python 3.7
 https://www.python.org/downloads/
 
-### Streamlit
+#### Streamlit
 pip install streamlit
 
-### Pandas 
+#### Pandas 
 pip install pandas
 
-### Pathlib
+#### Pathlib
 pip install pathlib
 
-### DotEnv
+#### DotEnv
 pip install -U python-dotenv
 
-### Web3
+#### Web3
 pip install web3==5.17
 
-### Ganache
+#### Ganache
 https://www.trufflesuite.com/ganache <-- follow instructions from this link
 
-### MetaMask
+#### MetaMask
 https://metamask.io/download/
 
