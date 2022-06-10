@@ -14,7 +14,7 @@ https://user-images.githubusercontent.com/95498383/172299934-a9bdcf37-6293-4155-
 https://user-images.githubusercontent.com/95498383/172528594-3ca3de35-c45d-4054-80cf-6ec7cc9201f8.mp4
 
 
-## The required librarys and installation required to run the auction house are as follows:
+## Required Libraries and Installation Instructions:
 
 ### Python 3.7
 https://www.python.org/downloads/
