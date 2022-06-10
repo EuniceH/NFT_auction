@@ -40,3 +40,15 @@ https://www.trufflesuite.com/ganache <-- follow instructions from this link
 #### MetaMask
 https://metamask.io/download/
 
+
+## Project Contributors 
+
+Leigh Badua
+
+Amine Baite
+
+Christopher Diamond
+
+Eunice Huang
+
+Loc Thai
