@@ -43,15 +43,17 @@ https://metamask.io/download/
 
 ## Project Contributors 
 
-Leigh Badua
+Connect with us on LinkedIn!
 
-Amine Baite
+[Leigh Badua](https://www.linkedin.com/in/leighbadua/)
 
-Christopher Diamond
+[Amine Baite](https://www.linkedin.com/in/amine-baite-3972a71b8/)
 
-Eunice Huang
+[Christopher Diamond](https://www.linkedin.com/in/christopher-diamond-4b7996116/)
 
-Loc Thai
+[Eunice Huang](https://www.linkedin.com/in/eunice-huang-9195096b/)
+
+[Loc Thai](https://www.linkedin.com/in/loc-thai-69b8a2141/)
 
 
 ## License
