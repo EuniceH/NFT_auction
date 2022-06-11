@@ -1,4 +1,4 @@
-
+#EH: import libraries
 import streamlit as st
 import pandas as pd
 from PIL import Image
@@ -11,7 +11,7 @@ from pathlib import Path
 import json
 
 
-#import nft_functions.py
+
 
 #EH: load env file
 load_dotenv()
@@ -23,6 +23,8 @@ w3 = Web3(Web3.HTTPProvider(os.getenv("WEB3_PROVIDER_URI")))
 # EH: Set layout as wide
 st.set_page_config(page_title="NFT Submission",layout="wide")
 
+
+#EH:  set streamlit cache for smart contract load
 @st.cache(allow_output_mutation=True)
 def load_contract():
 
@@ -92,7 +94,7 @@ close_date_request = st.date_input(
      datetime.now()+timedelta(days=7),min_value=datetime.now() +timedelta(days=7))
 st.write('Your close date (UTC) request is:', close_date_request)
 
-
+#EH: define load/open image function
 def load_image(image_file):
 	img = Image.open(image_file)
 	return img
