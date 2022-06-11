@@ -1,4 +1,4 @@
-
+#EH import libraries
 import streamlit as st
 import json
 import pandas as pd
@@ -6,9 +6,11 @@ from datetime import datetime,timezone
 import time
 from web3 import Web3
 from dotenv import load_dotenv
+from pathlib import Path
+import os
 w3 = Web3(Web3.HTTPProvider('HTTP://127.0.0.1:7545'))
 
-
+#EH: Set page layout
 st.set_page_config(page_title="NFT Auction",layout="wide")
 st.markdown(
 """
